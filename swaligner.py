@@ -59,11 +59,55 @@ def print_matrix(matrix):
     '''
     print(np.matrix(matrix).T)
 
-#add your function(s) to find a solution here.
+###add your function(s) to find a solution here.
 
-#end of your function(s)
+#from the matrix and the start position returns a list of the traversal
+def trace(matrix, start_pos):
+    result = [start_pos]
+    current_pos = start_pos
+    start_val = matrix[int(start_pos[0])][int(start_pos[1])]
+    while start_val != 0:
+        diag_score = matrix[int(current_pos[0]) -1][int(current_pos[1]) - 1]
+        left_score = matrix[int(current_pos[0])][int(current_pos[1] - 1)]
+        upper_score = matrix[int(current_pos[0]) -1][int(current_pos[1])]
+        if diag_score >= left_score:
+            if diag_score >= upper_score:
+                result.append((int(current_pos[0]) -1, int(current_pos[1]) - 1))
+                current_pos = (int(current_pos[0]) -1, int(current_pos[1]) - 1)
+        elif left_score >= upper_score:
+            if left_score >= diag_score:
+                result.append((int(current_pos[0]), int(current_pos[1]) - 1))
+                current_pos = (int(current_pos[0]), int(current_pos[1]) - 1)
+        elif upper_score >= left_score:
+            if upper_score >= diag_score:
+                result.append((int(current_pos[0]) -1, int(current_pos[1])))
+                current_pos = (int(current_pos[0]) -1, int(current_pos[1]))
+        start_val = matrix[int(current_pos[0])][int( current_pos[1])]
+    return result
+
+#from the list of the traversal returns a string representation
+def trace_string(trace):
+    result = ''
+    for pos in range(len(trace)):
+        if (pos + 1) != len(trace):
+            result = result + 'r' + str(trace[pos][1]) + 'c' + str(trace[pos][0]) + ' -> '
+        else:
+            result = result + 'r' + str(trace[pos][1]) + 'c' + str(trace[pos][0])
+    print(result)
+
+#returns a list of the actual matrix values of the traversal
+def check(matrix, trace):
+    result = []
+    for i in trace:
+        result.append(matrix[i[0]][i[1]])
+    return result
+
+###end of your function(s)
 
 if __name__ == '__main__':
     #my main
     score_matrix, start_pos = create_score_matrix(rows, cols)
     print_matrix(score_matrix)
+    traversal = trace(score_matrix, start_pos)
+    trace_string(traversal)
+    #print(check(score_matrix, traversal))
